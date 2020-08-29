@@ -2,7 +2,7 @@ import * as types from '../constants/action-types';
 import actionCreatorFactory from 'typescript-fsa';
 const actionCreator = actionCreatorFactory();
 import { BasedProps as Props, Viewport,
-  Movesbase, MovesbaseFile, Depotsbase, GetMovesOptionFunc, GetDepotsOptionFunc,
+  Movesbase, MovesbaseFile, Depotsbase, DepotsTextbase, GetMovesOptionFunc, GetDepotsOptionFunc,
   ClickedObject, RoutePaths, LineMapData } from '../types';
 
 export const addMinutes =  actionCreator<number>(types.ADDMINUTES);
@@ -17,6 +17,7 @@ export const setViewport = actionCreator<Viewport>(types.SETVIEWPORT);
 export const setDefaultViewport = actionCreator<void|{defaultZoom?:number,defaultPitch?:number}>(types.SETDEFAULTVIEWPORT);
 export const setMovesBase = actionCreator<(Movesbase[] | MovesbaseFile)>(types.SETMOVESBASE);
 export const setDepotsBase = actionCreator<Depotsbase[]>(types.SETDEPOTSBASE);
+export const setDepotsTextBase = actionCreator<DepotsTextbase[]>(types.SETDEPOTSTEXTBASE);
 export const setAnimatePause = actionCreator<boolean>(types.SETANIMATEPAUSE);
 export const setAnimateReverse = actionCreator<boolean>(types.SETANIMATEREVERSE);
 export const setSecPerHour =　actionCreator<number>(types.SETSECPERHOUR);

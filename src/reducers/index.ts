@@ -1,8 +1,8 @@
-import { analyzeMovesBase, getMoveObjects, getDepots, calcLoopTime } from '../library';
+import { analyzeMovesBase, getMoveObjects, getDepots, getDepotsText, calcLoopTime } from '../library';
 import { reducerWithInitialState } from "typescript-fsa-reducers";
 import { InnerState, AnalyzedBaseData } from '../types';
 import { addMinutes, setViewport, setDefaultViewport, setTimeStamp, 
-  setTime, increaseTime, decreaseTime, setLeading, setTrailing, setFrameTimestamp, setMovesBase, setDepotsBase, 
+  setTime, increaseTime, decreaseTime, setLeading, setTrailing, setFrameTimestamp, setMovesBase, setDepotsBase, setDepotsTextBase,
   setAnimatePause, setAnimateReverse, setSecPerHour, setClicked, 
   setRoutePaths, setDefaultPitch, setMovesOptionFunc, setDepotsOptionFunc, 
   setLinemapData, setLoading, setInputFilename, updateMovesBase, setNoLoop, setInitialViewChange } from '../actions';
@@ -34,6 +34,7 @@ const initialState: InnerState = {
   beforeFrameTimestamp: 0,
   movesbase: [],
   depotsBase: [],
+  depotsTextBase: [],
   bounds: {
     westlongitiude: 0,
     eastlongitiude: 0,
@@ -52,6 +53,7 @@ const initialState: InnerState = {
   getDepotsOptionFunc: null,
   movedData: [],
   depotsData: [],
+  depotsTextData: [],
   linemapData: [],
   loading: false,
   inputFileName: {},
@@ -222,6 +224,15 @@ reducer.case(setDepotsBase, (state, depotsBase) => {
   assignData.depotsBase = depotsBase;
   if(state.depotsBase.length <= 0 || state.depotsData.length <= 0 || state.getDepotsOptionFunc){
     assignData.depotsData = getDepots({ ...state, depotsBase });
+  }
+  return Object.assign({}, state, assignData);
+});
+
+reducer.case(setDepotsTextBase, (state, depotsTextBase) => {
+  const assignData:InnerState = {};
+  assignData.depotsTextBase = depotsTextBase;
+  if(state.depotsTextBase.length <= 0 || state.depotsTextData.length <= 0 || state.getDepotsOptionFunc){
+    assignData.depotsTextData = getDepotsText({ ...state, depotsTextBase });
   }
   return Object.assign({}, state, assignData);
 });

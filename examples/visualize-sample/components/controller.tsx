@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MovesInput, DepotsInput, LinemapInput,
+import { MovesInput, DepotsTextInput, LinemapInput,
   AddMinutesButton, PlayButton, PauseButton, ReverseButton, ForwardButton,
   ElapsedTimeRange, ElapsedTimeValue, SpeedRange, SpeedValue, SimulationDateTime,
   NavigationButton, BasedProps, ClickedObject, RoutePaths } from 'harmoware-vis';
@@ -125,8 +125,8 @@ export default class Controller extends React.Component<Props, State> {
             </li>
             <li>
               <div className="vis_sample_input_button_column">
-                <label htmlFor="DepotsInput" className="btn btn-outline-light btn-sm w-100">
-                  停留所データ選択<DepotsInput actions={actions} id="DepotsInput" />
+                <label htmlFor="DepotsTextInput" className="btn btn-outline-light btn-sm w-100">
+                  ゲート位置データ選択<DepotsTextInput actions={actions} id="DepotsTextInput" />
                 </label>
                 <div>{depotsFileName || '選択されていません'}</div>
               </div>

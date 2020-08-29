@@ -45,6 +45,8 @@ declare module "@deck.gl/layers" {
   class PolygonLayer<P extends LayerProps = LayerProps, S = {}> extends CompositeLayer<P, S> {}
 
   class PointCloudLayer<P extends LayerProps = LayerProps, S = {}> extends Layer<P, S> {}
+
+  class TextLayer<P extends LayerProps = LayerProps, S = {}> extends CompositeLayer<P, S> {}
 }
 
 declare module "@deck.gl/aggregation-layers" {

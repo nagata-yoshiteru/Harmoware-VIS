@@ -7,6 +7,7 @@ import {
   setDefaultViewport,
   setMovesBase,
   setDepotsBase,
+  setDepotsTextBase,
   setAnimatePause,
   setAnimateReverse,
   setSecPerHour,
@@ -34,7 +35,9 @@ import {
   Bounds,
   ClickedObject,
   Depotsbase,
+  DepotsTextbase,
   DepotsData,
+  DepotsTextData,
   IconDesignation,
   MovedData,
   Movesbase,
@@ -48,6 +51,7 @@ import {
 
 import MovesInput from './components/moves-input';
 import DepotsInput from './components/depots-input';
+import DepotsTextInput from './components/depots-text-input';
 import LinemapInput from './components/linemap-input';
 import LoadingIcon from './components/loading-icon';
 import AddMinutesButton from './components/addminutes-button';
@@ -65,6 +69,7 @@ import NavigationButton from './components/navigation-button';
 import FpsDisplay from './components/fps-display';
 import MovesLayer from './layers/moves-layer';
 import DepotsLayer from './layers/depots-layer';
+import DepotsTextLayer from './layers/depots-text-layer';
 import LineMapLayer from './layers/line-map-layer';
 import * as settings from './constants/settings';
 import Container from './containers';
@@ -80,6 +85,7 @@ const Actions: ActionsInterface = {
   setDefaultViewport,
   setMovesBase,
   setDepotsBase,
+  setDepotsTextBase,
   setAnimatePause,
   setAnimateReverse,
   setSecPerHour,
@@ -107,6 +113,7 @@ export {
   // components
   MovesInput,
   DepotsInput,
+  DepotsTextInput,
   LinemapInput,
   LoadingIcon,
   AddMinutesButton,
@@ -129,6 +136,7 @@ export {
   // layers
   MovesLayer,
   DepotsLayer,
+  DepotsTextLayer,
   LineMapLayer,
   // library
   getContainerProp,
@@ -142,7 +150,9 @@ export {
   Bounds,
   ClickedObject,
   Depotsbase,
+  DepotsTextbase,
   DepotsData,
+  DepotsTextData,
   IconDesignation,
   MovedData,
   MovesbaseOperation,

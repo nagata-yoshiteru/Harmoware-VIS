@@ -2,8 +2,10 @@ import * as React from 'react';
 import { PolygonLayer, PointCloudLayer } from '@deck.gl/layers';
 import { HexagonLayer } from '@deck.gl/aggregation-layers';
 import { Marker, Popup } from 'react-map-gl';
-import { Container, MovesLayer, DepotsLayer, LineMapLayer, HarmoVisLayers, MovedData,
-  connectToHarmowareVis, LoadingIcon, BasedProps, EventInfo, FpsDisplay } from 'harmoware-vis';
+import {
+  Container, MovesLayer, DepotsTextLayer, LineMapLayer, HarmoVisLayers, MovedData,
+  connectToHarmowareVis, LoadingIcon, BasedProps, EventInfo, FpsDisplay
+} from 'harmoware-vis';
 import Controller from '../components/controller';
 import SvgIcon from '../icondata/SvgIcon';
 import { NamedModulesPlugin } from 'webpack';
@@ -86,21 +88,22 @@ class App extends Container<BasedProps, State> {
     const { viewport } = this.props;
     const { direction, position } = data;
 
-    if(position){
+    if (position) {
       return (<Marker key={`marker-${index}`}
-      longitude={data.position[0]} latitude={data.position[1]} >
-      <SvgIcon viewport={viewport} direction={direction}
-      onMouseOver={() => this.setState({popupInfo: data})}
-      onMouseOut={() => this.setState({popupInfo: null})} />
+        longitude={data.position[0]} latitude={data.position[1]} >
+        <SvgIcon viewport={viewport} direction={direction}
+          onMouseOver={() => this.setState({ popupInfo: data })}
+          onMouseOut={() => this.setState({ popupInfo: null })} />
       </Marker>);
     }
     return null;
   }
 
   getPopup() {
-    const {popupInfo} = this.state;
+    const { popupInfo } = this.state;
 
-    if(popupInfo && popupInfo.position){
+    if (popupInfo && popupInfo.position) {
+      console.log("called getPopup", popupInfo);
       const objctlist = Object.entries(popupInfo);
       return (
         <Popup tipSize={5}
@@ -108,19 +111,19 @@ class App extends Container<BasedProps, State> {
           longitude={popupInfo.position[0]}
           latitude={popupInfo.position[1]}
           closeButton={false} >
-          <div>{objctlist.map((item)=><p>{`${item[0]}: ${item[1].toString()}`}</p>)}</div>
+          <div>{objctlist.map((item) => <p>{`${item[0]}: ${item[1].toString()}`}</p>)}</div>
         </Popup>
       );
     }
     return null;
   }
 
-  getMapGlComponents(movedData: MovedData[]){
+  getMapGlComponents(movedData: MovedData[]) {
     const { moveSvgVisible } = this.state;
-    if(moveSvgVisible){
+    if (moveSvgVisible) {
       return (
         <div>
-          {movedData.map( this.getMarker.bind(this) )}
+          {movedData.map(this.getMarker.bind(this))}
           {this.getPopup()}
         </div>
       );
@@ -128,25 +131,25 @@ class App extends Container<BasedProps, State> {
     return null;
   }
 
-  getPointCloudLayer(PointCloudData: any[]){
-    return PointCloudData.map((pointCloudElements:{pointCloud:any[]}, idx:Number)=>{
-      const {pointCloud} = pointCloudElements;
-      const data = pointCloud.filter(x=>x.position);
+  getPointCloudLayer(PointCloudData: any[]) {
+    return PointCloudData.map((pointCloudElements: { pointCloud: any[] }, idx: Number) => {
+      const { pointCloud } = pointCloudElements;
+      const data = pointCloud.filter(x => x.position);
       return new PointCloudLayer({
         id: 'PointCloudLayer-' + String(idx),
         data,
-        getColor: (x: any) => x.color || [255,255,255,255],
+        getColor: (x: any) => x.color || [255, 255, 255, 255],
         sizeUnits: 'meters',
         pointSize: 1,
       });
     });
   }
 
-  onHover(el: EventInfo){
+  onHover(el: EventInfo) {
     if (el && el.object) {
       let disptext = '';
       const objctlist = Object.entries(el.object);
-      for (let i = 0, lengthi = objctlist.length; i < lengthi; i=(i+1)|0) {
+      for (let i = 0, lengthi = objctlist.length; i < lengthi; i = (i + 1) | 0) {
         const strvalue = objctlist[i][1].toString();
         disptext = disptext + (i > 0 ? '\n' : '');
         disptext = disptext + (`${objctlist[i][0]}: ${strvalue}`);
@@ -157,15 +160,29 @@ class App extends Container<BasedProps, State> {
     }
   }
 
+  onClick(el: EventInfo) {
+    if (el && el.object) {
+      let disptext = '';
+      const objctlist = Object.entries(el.object);
+      for (let i = 0, lengthi = objctlist.length; i < lengthi; i = (i + 1) | 0) {
+        const strvalue = objctlist[i][1].toString();
+        disptext = disptext + (i > 0 ? '\n' : '');
+        disptext = disptext + (`${objctlist[i][0]}: ${strvalue}`);
+      }
+      console.log(disptext);
+    }
+  }
+
   render() {
     const props = this.props;
     const { actions, routePaths, viewport, loading,
-      clickedObject, movedData, movesbase, depotsData, linemapData } = props;
-    const polygonData = movedData.filter((x:any)=>(x.coordinates || x.polygon));
-    const hexagonData = this.state.heatmapVisible ? movedData.filter(x=>x.position):[];
-    const PointCloudData = movedData.filter((x:any)=>x.pointCloud);
+      clickedObject, movedData, movesbase, depotsTextData, linemapData } = props;
+    const polygonData = movedData.filter((x: any) => (x.coordinates || x.polygon));
+    const hexagonData = this.state.heatmapVisible ? movedData.filter(x => x.position) : [];
+    const PointCloudData = movedData.filter((x: any) => x.pointCloud);
 
     const onHover = this.onHover.bind(this);
+    const onClick = this.onClick.bind(this);
 
     return (
       <div>
@@ -199,72 +216,76 @@ class App extends Container<BasedProps, State> {
             mapStyle={this.state.mapboxVisible ? undefined : ''}
             visible={this.state.mapboxVisible}
             layers={[].concat(
-              depotsData.length > 0 ?
-              new DepotsLayer({
-                depotsData,
-                /* iconDesignations Setting Example
-                iconDesignations: [{type:'stop', layer:'Scatterplot'},{type:'station', layer:'SimpleMesh'}],
-                /**/
-                optionVisible: this.state.depotOptionVisible,
-                optionChange: this.state.optionChange,
-                iconChange: this.state.iconChange,
-                onHover
-              }):null,
+              depotsTextData.length > 0 ?
+                new DepotsTextLayer({
+                  depotsTextData: depotsTextData,
+                  iconDesignations: [
+                    { type: 'ext', layer: 'SimpleMesh', getColor: () => [0, 0, 255, 255] },
+                    { type: 'int', layer: 'SimpleMesh', getColor: () => [255, 255, 0, 255] },
+                  ],
+                  optionVisible: this.state.depotOptionVisible,
+                  optionChange: this.state.optionChange,
+                  iconChange: this.state.iconChange,
+                  layerOpacity: 0.5,
+                  opacity: 0.5,
+                  onHover,
+                  onClick,
+                }) : null,
               this.state.moveDataVisible && movedData.length > 0 ?
-              new MovesLayer({
-                // scenegraph,
-                routePaths,
-                movedData,
-                movesbase,
-                /* iconDesignations Setting Example
-                iconDesignations:[{type:'car', layer:'SimpleMesh', getColor:()=>[255,0,0,255]},
-                {type:'bus', layer:'Scenegraph', getScale:()=>[0.2,0.2,0.2], getOrientation:()=>[0,0,90]},
-                {type:'walker', layer:'Scatterplot'},],
-                /**/
-                clickedObject,
-                actions,
-                visible: this.state.moveDataVisible,
-                optionVisible: this.state.moveOptionVisible,
-                optionChange: this.state.optionChange,
-                iconChange: this.state.iconChange, // Invalid if there is iconDesignations definition
-                iconCubeType: this.state.iconCubeType, // Invalid if there is iconDesignations definition
-                sizeScale: this.state.iconCubeType === 0 ? 20 : 2,
-                onHover
-              }):null,
+                new MovesLayer({
+                  // scenegraph,
+                  routePaths,
+                  movedData,
+                  movesbase,
+                  /* iconDesignations Setting Example
+                  iconDesignations:[{type:'car', layer:'SimpleMesh', getColor:()=>[255,0,0,255]},
+                  {type:'bus', layer:'Scenegraph', getScale:()=>[0.2,0.2,0.2], getOrientation:()=>[0,0,90]},
+                  {type:'walker', layer:'Scatterplot'},],
+                  /**/
+                  clickedObject,
+                  actions,
+                  visible: this.state.moveDataVisible,
+                  optionVisible: this.state.moveOptionVisible,
+                  optionChange: this.state.optionChange,
+                  iconChange: this.state.iconChange, // Invalid if there is iconDesignations definition
+                  iconCubeType: this.state.iconCubeType, // Invalid if there is iconDesignations definition
+                  sizeScale: this.state.iconCubeType === 0 ? 20 : 2,
+                  onHover
+                }) : null,
               linemapData.length > 0 ?
-              new LineMapLayer({
-                id: 'line-map',
-                data: linemapData,
-                onHover
-              }):null,
-              polygonData.length > 0  ?
-              new PolygonLayer({
-                id: 'PolygonLayer',
-                data: polygonData,
-                visible: true,
-                opacity: 0.5,
-                pickable: true,
-                extruded: true,
-                wireframe: true,
-                getPolygon: (x: any) => x.coordinates || x.polygon,
-                getFillColor: (x: any) => x.color || [255,255,255,255],
-                getLineColor: null,
-                getElevation: (x: any) => x.elevation || 3,
-                onHover: onHover
-              }):null,
-              PointCloudData.length > 0 ? this.getPointCloudLayer(PointCloudData):null,
+                new LineMapLayer({
+                  id: 'line-map',
+                  data: linemapData,
+                  onHover
+                }) : null,
+              polygonData.length > 0 ?
+                new PolygonLayer({
+                  id: 'PolygonLayer',
+                  data: polygonData,
+                  visible: true,
+                  opacity: 0.5,
+                  pickable: true,
+                  extruded: true,
+                  wireframe: true,
+                  getPolygon: (x: any) => x.coordinates || x.polygon,
+                  getFillColor: (x: any) => x.color || [255, 255, 255, 255],
+                  getLineColor: null,
+                  getElevation: (x: any) => x.elevation || 3,
+                  onHover: onHover
+                }) : null,
+              PointCloudData.length > 0 ? this.getPointCloudLayer(PointCloudData) : null,
               this.state.heatmapVisible && hexagonData.length > 0 ?
-              new HexagonLayer({
-                id: '3d-heatmap',
-                data: hexagonData,
-                getPosition: (x: any) => x.position,
-                radius: 100,
-                opacity: 0.5,
-                extruded: true,
-                visible: this.state.heatmapVisible
-              }):null
+                new HexagonLayer({
+                  id: '3d-heatmap',
+                  data: hexagonData,
+                  getPosition: (x: any) => x.position,
+                  radius: 100,
+                  opacity: 0.5,
+                  extruded: true,
+                  visible: this.state.heatmapVisible
+                }) : null
             )}
-            mapGlComponents={ this.getMapGlComponents(movedData) }
+            mapGlComponents={this.getMapGlComponents(movedData)}
           />
         </div>
         <svg width={viewport.width} height={viewport.height} className="harmovis_overlay">

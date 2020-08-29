@@ -60,6 +60,13 @@ export interface Depotsbase {
   position?: number[]
 };
 
+export interface DepotsTextbase {
+  type?: string,
+  longitude?: number,
+  latitude?: number,
+  position?: number[]
+};
+
 export interface ClickedObject {
   object: {movesbaseidx: number},
   layer: {id: string}
@@ -115,6 +122,17 @@ export interface DepotsData {
   settime?: number,
 };
 
+export interface DepotsTextData {
+  type?: string,
+  position: number[],
+  radius?: number,
+  color?: (number | number[])[],
+  optColor?: number[][],
+  optElevation?: number[],
+  settime?: number,
+  text?: string,
+};
+
 export type LayerTypes = 'Scatterplot'|'SimpleMesh'|'Scenegraph';
 export interface IconDesignation {
   type: string,
@@ -141,6 +159,8 @@ export interface InnerState {
   defaultZoom?: number,
   depotsBase?: Depotsbase[],
   depotsData?: DepotsData[],
+  depotsTextBase?: DepotsTextbase[],
+  depotsTextData?: DepotsTextData[],
   getDepotsOptionFunc?: null | (<P>(props: P, i: number) => object),
   getMovesOptionFunc?: null | (<P>(props: P, i: number, j: number) => object),
   leading?: number,
@@ -173,6 +193,8 @@ export interface BasedState {
   defaultZoom: number,
   depotsBase: Depotsbase[],
   depotsData: DepotsData[],
+  depotsTextBase: DepotsTextbase[],
+  depotsTextData: DepotsTextData[],
   getDepotsOptionFunc: null | (<P>(props: P, i: number) => object),
   getMovesOptionFunc: null | (<P>(props: P, i: number, j: number) => object),
   leading: number,

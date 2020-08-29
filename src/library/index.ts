@@ -3,7 +3,7 @@ import { bindActionCreators, combineReducers } from 'redux';
 import * as Actions from '../actions';
 import reducers from '../reducers';
 import { ActionTypes, AnalyzedBaseData, InnerProps, RoutePaths, IconDesignation,
-  Bounds, MovesbaseFile, Movesbase, MovedData, DepotsData, Viewport,
+  Bounds, MovesbaseFile, Movesbase, MovedData, DepotsData, DepotsTextData, Viewport,
   GetDepotsOptionFunc, GetMovesOptionFunc, ClickedObject, EventInfo } from '../types';
 import { COLOR1 } from '../constants/settings';
 
@@ -156,6 +156,27 @@ export const getDepots = (props: InnerProps): DepotsData[] => {
   return [];
 };
 
+export const getDepotsText = (props: InnerProps): DepotsTextData[] => {
+  const { settime, depotsTextBase, depotsTextData:prevData, getDepotsOptionFunc } = props;
+  if(prevData.length > 0 && (Math.abs(prevData[0].settime - settime) <= 1)){
+    if(!getDepotsOptionFunc) return prevData;
+  }
+  const getOptionFunction: GetDepotsOptionFunc = getDepotsOptionFunc || (() => {return {};});
+
+  if (depotsTextBase.length > 0) {
+    const depotsTextData: DepotsTextData[] = [];
+    for (let i = 0, lengthi = depotsTextBase.length; i < lengthi; i=(i+1)|0) {
+      const { longitude, latitude, position=[longitude, latitude, 0], ...otherProps } = depotsTextBase[i];
+      depotsTextData[i] = Object.assign({},
+        otherProps, { settime, position},
+        getOptionFunction(props, i),
+      );
+    }
+    return depotsTextData;
+  }
+  return [];
+};
+
 export const getMoveObjects = (props : InnerProps): MovedData[] => {
   const { movesbase, movedData:prevMovedData, settime, secperhour, timeBegin, timeLength,
     getMovesOptionFunc } = props;
@@ -232,6 +253,7 @@ export const onHoverClick = (pickParams: pickParams, getRouteColor:Function,
   const { object, layer } = info;
   const { id, props } = layer;
   if (mode === 'hover' && props.onHover) {
+    console.log("onHover");
     props.onHover(info);
   }
   if (mode === 'click' || mode === 'query') {
