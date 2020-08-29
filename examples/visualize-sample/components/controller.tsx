@@ -109,7 +109,7 @@ export default class Controller extends React.Component<Props, State> {
 
     const { currentGroupindex, routeGroupDisplay, saveRouteGroup } = this.state;
     const displayIndex = saveRouteGroup.length ? currentGroupindex + 1 : 0;
-    const { movesFileName, depotsFileName, linemapFileName } = inputFileName;
+    const { movesFileName, depotsTextFileName, linemapFileName } = inputFileName;
 
     return (
       <div className="vis_sample_controller">
@@ -128,7 +128,7 @@ export default class Controller extends React.Component<Props, State> {
                 <label htmlFor="DepotsTextInput" className="btn btn-outline-light btn-sm w-100">
                   ゲート位置データ選択<DepotsTextInput actions={actions} id="DepotsTextInput" />
                 </label>
-                <div>{depotsFileName || '選択されていません'}</div>
+                <div>{depotsTextFileName || '選択されていません'}</div>
               </div>
             </li>
             <li>
