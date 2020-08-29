@@ -1,7 +1,7 @@
 {
   "name": "harmoware-vis",
   "description": "This is a minimal standalone version of the TripsLayer example on [deck.gl](http://deck.gl) website.",
-  "version": "1.6.16",
+  "version": "1.6.19",
   "main": "lib/src/index.js",
   "types": "lib/src/index.d.ts",
   "scripts": {
@@ -15,15 +15,12 @@
   },
   "dependencies": {
     "@luma.gl/core": "^8.2.0",
-    "@deck.gl/core": "^8.2.5",
-    "@deck.gl/react": "^8.2.5",
-    "@deck.gl/layers": "^8.2.5",
-    "@deck.gl/aggregation-layers": "^8.2.5",
-    "@deck.gl/mesh-layers": "^8.2.5",
+    "deck.gl": "^8.2.5",
     "gl-matrix": "^2.8.1",
-    "mapbox-gl": "^1.11.0",
+    "mapbox-gl": "^1.12.0",
     "react-icons-kit": "^1.3.1",
     "react-map-gl": "^5.2.7",
+    "react-spinners": "^0.8.3",
     "typescript-fsa": "^3.0.0",
     "typescript-fsa-reducers": "^1.2.2"
   },
@@ -63,9 +60,8 @@
     "node-sass": "^4.14.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-i18next": "^11.7.0",
+    "react-i18next": "^11.7.1",
     "react-redux": "^7.2.1",
-    "react-spinners": "^0.8.3",
     "redux": "^4.0.5",
     "redux-saga": "^1.1.3",
     "sass-loader": "^8.0.2",
